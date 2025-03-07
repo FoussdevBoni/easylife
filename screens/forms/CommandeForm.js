@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, StyleSheet, View, Modal, TextInput, Alert } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, View, Modal, TextInput, Alert, ScrollView, Keyboard } from 'react-native';
 import { ActivityIndicator, RadioButton } from 'react-native-paper';
 import { Appbar } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -20,7 +20,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 function CommandeForm({ user , color , layout }) {
  const [selectedLocation, setSelectedLocation] = useState('home');
 const [selectedPayment, setSelectedPayment] = useState('mainAccount');
-const { cart , amount} = useRoute().params;
+const { cart , amount: sampleAmount} = useRoute().params;
 const pharmaCart = cart.filter(item => item.layout === 'pharmacie');
 const [currentAddress, setCurrentAddress] = useState(null);
 const [modalVisible, setModalVisible] = useState(false);
@@ -33,7 +33,8 @@ const [imageLoading, setImageLoading] = useState(false);
 const navigation = useNavigation();
 const dispatch = useDispatch()
 const [payementRef , setPayementRef] = useState("")
-
+const amount = sampleAmount + 500
+const [showFooter , setShowFooter ]= useState(true)
 const sendNotif = () => {
     const notification = {
         message: `${user?.nom} a commandée  ${pharmaCart.length} medicaments `,
@@ -44,6 +45,20 @@ const sendNotif = () => {
   
 };
 
+useEffect(() => {
+  const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+    setShowFooter(false);
+  });
+
+  const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+    setShowFooter(true);
+  });
+
+  return () => {
+    showSubscription.remove();
+    hideSubscription.remove();
+  };
+}, []);
 
 
 const handleSendCommande = () => {
@@ -203,7 +218,7 @@ useEffect(()=>{
       <StackAppbar title='Paiement' color={color}/>
 
       {/* Main content */}
-      <View style={styles.contentContainer}>
+      <ScrollView style={styles.contentContainer}>
         <View style={styles.messageContainer}>
           <Text style={styles.messageText}>
             La commande sera livrée à {user?.nom}
@@ -264,12 +279,12 @@ useEffect(()=>{
 
         {/* Payment method selection */}
         <View style={styles.paymentContainer}>
-          <Text style={styles.sectionTitle}>Méthode de paiement</Text>
+          <Text style={styles.sectionTitle}>Choisir un mode de paiement</Text>
 
           <View style={styles.row}>
            
             <Text style={styles.paymentText}>
-              Compte EASY-LIFE
+              Compte EASY LIFE PAY
             </Text>
              <RadioButton
                color={color}
@@ -282,18 +297,36 @@ useEffect(()=>{
           <View style={styles.row}>
            
             <Text style={styles.paymentText}>
-              {'Mobile Money        '   }
+              {'Mobile Money '}
             </Text>
              <RadioButton
               color={color}
               value="momo"
               status={selectedPayment === 'momo' ? 'checked' : 'unchecked'}
               onPress={() => {
-                setModalVisible1(true)
                 setSelectedPayment('momo')
               }}
             />
           </View>
+           
+          <View  style={styles.inputContainer}>
+          {
+            selectedPayment === 'momo' &&   <TextInput
+            onFocus={()=>{
+              setShowFooter(false)
+            }}
+            onBlur={()=>{
+              setShowFooter(true)
+            }}
+            style={styles.input}
+            placeholder="Entrez votre numéro Mobile money"
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+          />
+           
+           }
+          </View>
+            
 
        
         </View>
@@ -302,33 +335,39 @@ useEffect(()=>{
             style={[styles.addDetailsButton , {backgroundColor: color}]}
             onPress={() => setModalVisible(true)}
           >
-            <Text style={styles.addDetailsButtonText}>Ajouter plus de précisions</Text>
+            <Text style={styles.addDetailsButtonText}>Ajouter plus de details</Text>
           </TouchableOpacity>
-      </View>
+      </ScrollView>
 
 
       {/* Footer: Amount and validation button */}
-      <View style={styles.about}>
+       {
+        showFooter &&  <View style={styles.about}>
         <View style={styles.amountContainer}>
-          <Text style={styles.amountLabel}>Montant total :</Text>
-          <Text style={styles.amountValue}>{amount} FCFA</Text>
+            <Text style={styles.amountLabel}>Frais de livraison :</Text>
+            <Text style={{...styles.amountValue, color}}>{500} FCFA</Text>
+          </View>
+          <View style={styles.amountContainer}>
+            <Text style={styles.amountLabel}>Montant total :</Text>
+            <Text style={{...styles.amountValue, color}}>{amount} FCFA</Text>
+          </View>
+  
+          <View style={styles.validationContainer}>
+            <TouchableOpacity style={[styles.validationButton , {backgroundColor: color}]} onPress={()=>{
+                 if (!loading) {
+                handleSubmit()
+              }else{
+                Alert.alert("Désolé" , "Une opération est en cour")
+              }
+            }}>
+              {
+                !loading ? <Text style={styles.validationButtonText}>Valider votre commande</Text>: <ActivityIndicator size={25} color='white'/>
+              }
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={styles.validationContainer}>
-          <TouchableOpacity style={[styles.validationButton , {backgroundColor: color}]} onPress={()=>{
-               if (!loading) {
-              handleSubmit()
-            }else{
-              Alert.alert("Désolé" , "Une opération est en cour")
-            }
-          }}>
-            {
-              !loading ? <Text style={styles.validationButtonText}>Valider</Text>: <ActivityIndicator size={25} color='white'/>
-            }
-          </TouchableOpacity>
-        </View>
-      </View>
-
+  
+       }
        <CustomModal
         title={"Ajouter les details"}
         isModalVisible={modalVisible}
@@ -393,38 +432,7 @@ useEffect(()=>{
         </View>
       </CustomModal>
 
-         <CustomModal
-         title={" Ajouter votre numéro Mobile Money"}
-        animationType="slide"
-        transparent={false}
-        isModalVisible={modalVisible1}
-        setModalVisible={setModalVisible1}
-        color={color}
-      >
-        <View style={styles.modalContainer}>
-          {/* Modal Header */}
-          
-
-          {/* Modal Content */}
-          <View style={styles.modalContent}>
-            <TextInput
-              style={styles.input}
-              placeholder="Entrez votre numéro Mobile money"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-            />
-
-            <TouchableOpacity
-              style={{...styles.submitButton, backgroundColor: color}}
-              onPress={() => {
-                setModalVisible1(false);
-              }}
-            >
-              <Text style={styles.submitButtonText}>Continuer</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </CustomModal>
+      
     </View>
   );
 }
@@ -563,15 +571,29 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 100,
     fontFamily: 'montserrat-bold',
-
+    width: "50%"
   },
-
-  input: {
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
   
+  inputContainer: {
+    alignItems: 'center'
+  },
+  input: {
+      width: '80%',
+      height: 50,
+      borderColor: '#ddd',
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 15,
+      fontSize: 16,
+      color: '#333',
+      backgroundColor: '#fff',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 2,
+      marginBottom: 15,
+      textAlign: 'center'
   },
   submitButton: {
     paddingVertical: 15,

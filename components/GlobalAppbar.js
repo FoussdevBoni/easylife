@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Appbar, Avatar, Badge } from 'react-native-paper';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import * as Location from 'expo-location'; // Importer expo-location
@@ -63,8 +63,11 @@ const GlobalAppBar = ({ user , color }) => {
 
       {/* Avatar à gauche */}
       <Appbar.Action
-        icon={() => <Avatar.Image size={30} style={{marginLeft: -4 , backgroundColor: 'white'}} source={{ uri: 'https://cdn-icons-png.freepik.com/512/61/61205.png' }} />}
-        onPress={_openProfile}
+        icon="account-circle" size={30} onPress={_handleNotificationIconPress} color="white"
+       
+        onPress={()=>{
+          _openProfile()
+        }}
       />
 
       {/* Localisation avec icône au centre */}
@@ -97,6 +100,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  avatar: {
+    width: "100%",
+    height: "100%",
+    resizeMode: 'cover',
+    borderRadius: 25
+  } ,
   locationText: {
     color: 'white',
     fontSize: 16,

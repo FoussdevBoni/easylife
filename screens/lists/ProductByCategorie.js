@@ -24,7 +24,9 @@ function ProductsByCategory({ user , color , layout , collectionName }) {
          showsHorizontalScrollIndicator={false}
          data={data}
          renderItem={()=>(
-            <ProductsListSection collectionName={collectionName} user={user} categorieName={query} />
+            <ProductsListSection layout={layout} collectionName={collectionName} user={user} 
+
+            categorieName={query} />
          )}
         />
         </View>

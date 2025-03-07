@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    elevation: 3, // Pour Android
+    elevation: 3,
+    marginTop:-10
   },
   buttonText: {
     fontFamily: 'montserrat-bold',

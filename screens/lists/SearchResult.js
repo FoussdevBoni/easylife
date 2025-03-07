@@ -28,7 +28,7 @@ function SearchResults({ user , color , layout , collectionName }) {
             <ProductsListSection user={user}
              layout={layout}
             collectionName={collectionName} nom={query} description={query} 
-            categorieName={query} />
+            />
          )}
         />
         </View>

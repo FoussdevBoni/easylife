@@ -3,8 +3,6 @@ import { Appbar, Avatar, Badge } from 'react-native-paper';
 import { StyleSheet, View, Text, Image, Dimensions } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import * as Location from 'expo-location'; // Importer expo-location
-import { MaterialIcons } from '@expo/vector-icons'; // Pour l'icône de localisation
 import { colors } from '../utils/colors';
 
 const {width} =  Dimensions.get("screen")
@@ -22,7 +20,8 @@ const TabAppBar = ({ user }) => {
 
       {/* Avatar à gauche */}
       <View style={styles.notificationContainer}>
-        <Appbar.Action icon="menu" onPress={_handleNotificationIconPress} color={colors.primary}/>
+        <Appbar.Action   size={25} icon="menu" onPress={_handleNotificationIconPress} 
+        color={colors.primary}/>
        
       </View>
 
@@ -62,6 +61,7 @@ const styles = StyleSheet.create({
   },
   notificationContainer: {
     position: 'relative',
+    left: -10
   },
   badge: {
     position: 'absolute',

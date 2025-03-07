@@ -43,7 +43,11 @@ const ProductItem = ({ product, color , layout }) => {
     <TouchableOpacity onPress={()=>{
       navigation.navigate(`${route}` , {product})
     }}>
-       <XProductItem  color={color} product={product} onAddCart={()=>{
+       <XProductItem layout={layout} openDetails={
+        ()=>{
+          navigation.navigate(`${route}` , {product})
+        }
+       }  color={color} product={product} onAddCart={()=>{
         addToCart()
        }}/>
     </TouchableOpacity>

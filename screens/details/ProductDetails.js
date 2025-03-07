@@ -35,6 +35,8 @@ const ProductDetails = ({color , layout , collectionName}) => {
     const existingItemCart = cart.find((item) => item.id === product.id);
     const reduction = product.prix*(1- product.reduction/100)
 
+    
+
    const navigation = useNavigation()
   const dispatch = useDispatch()
   
@@ -49,22 +51,31 @@ const ProductDetails = ({color , layout , collectionName}) => {
   };
 
   const addToCart = (productToAdd) => {
-    if (existingItemCart) {
-       navigation.navigate("cart")
-    } else {
-       if (productToAdd) {
+    if (productToAdd) {
+      const existingProductCart = cart.find((item) => item.id === productToAdd.id);
+      if (existingProductCart) {
+        
+      }else {
         dispatch(setCart([...cart, { ...productToAdd, quantity }]));
-       }else {
-         dispatch(setCart([...cart, { ...product, quantity }]));
-       }
+
+      }
+    } else {
+      if (existingItemCart) {
+        navigation.navigate("cart")
+     } else {
+          dispatch(setCart([...cart, { ...product, quantity }]));
+     }
     }
-    setShowSnackBar(true); 
+
+   
   };
 
 
 
   const addVariationToCart = (variation )=>{
-    if (existingItemCart) {
+    const existingVariationCart = cart.find((item) => item.nom === variation.nom);
+
+    if (existingVariationCart) {
       navigation.navigate("cart")
    } else {
      dispatch(setCart([...cart, 
@@ -233,7 +244,7 @@ const ProductDetails = ({color , layout , collectionName}) => {
 
      
       {
-        product.isPromo ? <Text style={styles.price}>{reduction} XOF</Text>: <Text style={styles.price}>{product.prix} XOF</Text>
+        product.isPromo ? <Text style={styles.price}>{reduction} Fcfa</Text>: <Text style={styles.price}>{product.prix} XOF</Text>
       }
 
 
@@ -274,11 +285,12 @@ const ProductDetails = ({color , layout , collectionName}) => {
 
        {
          variations.length>0 &&  <Text style={styles.sectionTitle}>
-           {product.nom}
+            Variations (différentes options)
          </Text>
        }
 
       <FlatList
+        style={{marginTop: -10}}
         horizontal
         data={variations}
         keyExtractor={(item) => item.value}
@@ -304,12 +316,11 @@ const ProductDetails = ({color , layout , collectionName}) => {
            }
           
       <FlatList
+        style={{marginTop: -10}}
         horizontal
         data={similarDishes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.similarDish}>
-            <TouchableOpacity style={styles.similarDish}>
             <VariationItem 
                color={color}
                prix={item.prix} id={item.id} nom={item.nom} image={item.images[0]}
@@ -319,8 +330,6 @@ const ProductDetails = ({color , layout , collectionName}) => {
                 }
                }
             />
-          </TouchableOpacity>
-          </TouchableOpacity>
         )}
         showsHorizontalScrollIndicator={false}
       />
@@ -330,11 +339,11 @@ const ProductDetails = ({color , layout , collectionName}) => {
       </Text>
 
       <FlatList
+        style={{marginTop: -10}}
         horizontal
         data={restoProducts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.similarDish}>
             <VariationItem 
               color={color}
              prix={item.prix} id={item.id} nom={item.nom} image={item.images[0]}
@@ -344,7 +353,6 @@ const ProductDetails = ({color , layout , collectionName}) => {
               }
              }
             />
-          </TouchableOpacity>
         )}
         showsHorizontalScrollIndicator={false}
       />

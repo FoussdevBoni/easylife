@@ -1,13 +1,8 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Image, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Dimensions, Linking } from 'react-native';
-import { Appbar } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
-import XVendeursList from '../../components/lists/XVendeursList';
 import getCurrentAddress from '../../lib/functions/getCurrentAddress';
-import { getDistance } from '../../lib/functions/getDistance';
-import { colors } from '../../utils/colors';
 import { firestoreDbService } from '../../lib/services/firestoreDbService';
 import XProductsList from '../../components/lists/XProductLists';
 import StackAppbar from '../../components/StackAppBar';
@@ -24,6 +19,7 @@ export default function Vendeur({ color, layout, collectionName }) {
   const [products, setMedicaments] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const note = vendeur.note ? vendeur.note.toFixed(1): '4.0'
   const navigation = useNavigation();
   const [myCoords, setMyCoords] = useState(null);
 
@@ -38,8 +34,6 @@ export default function Vendeur({ color, layout, collectionName }) {
     getMyCoords();
   }, []);
 
-  const result = getDistance(myCoords?.latitude, myCoords?.longitude, vendeur?.location?.latitude, vendeur?.location?.longitude);
-  const distance = result !== 'quelques' ? result.toFixed(0) : 'quelques';
 
   // Fetch similar products based on the vendeur ID and search term
   useEffect(() => {
@@ -60,7 +54,8 @@ export default function Vendeur({ color, layout, collectionName }) {
 
   const handleReservePress = () => {
     // Redirection vers une page web
-    Linking.openURL('https://www.example.com/reserve');
+    Linking.openURL("https://www.easylife5.com/commande-repas/reservations/create")  
+   
   };
 
   const handlePhonePress = () => {
@@ -68,7 +63,7 @@ export default function Vendeur({ color, layout, collectionName }) {
     Linking.openURL(`tel:${vendeur.tel}`);
   };
   const handleOpenWhatsap = ()=>{
-    Linking.openURL(`https://wa.me/${vendeur.tel || vendeur.whatsapp}`);
+    Linking.openURL(`https://wa.me/${vendeur.whatsapp}`);
 
   }
 
@@ -84,12 +79,61 @@ export default function Vendeur({ color, layout, collectionName }) {
               source={{ uri: vendeur.profile }}
               style={styles.logo}
             />
-            <Text style={styles.storeName}>
-              {vendeur.nom}
+            <View style={styles.infoSection}>
+          <TouchableOpacity onPress={handlePhonePress}>
+            <View style={styles.infoTextContainer}>
+              <Ionicons name="call" size={16} color={'white'} /> 
+              <Text style={styles.infoText}>
+                {vendeur.tel}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.infoTextContainer}>
+            <Ionicons name="location" size={16} color={"white"} /> 
+            <Text style={styles.infoText}>
+                {vendeur.adresse}
+              </Text>
+          </View>
+
+          <TouchableOpacity onPress={handleOpenWhatsap}>
+            <View style={styles.infoTextContainer}>
+              <Ionicons name="logo-whatsapp" size={16} color={"white"} />
+              <Text style={styles.infoText}>
+                {vendeur.whatsapp || vendeur.tel}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.infoTextContainer}>
+            <Ionicons name="time" size={16} color={'white'} /> 
+            <Text style={styles.infoText}>
+               {vendeur.disponibilites}
+              </Text>
+          </View>
+
+          <View style={styles.infoTextContainer}>
+            <Ionicons name="star" size={16} color={'white'} /> 
+            <Text style={styles.infoText}>
+               {note || '4.0'}/5
             </Text>
+          </View>
+
+
+           {
+            layout==='restaurant' &&  <View style={styles.reserveButtonContainer}>
+            <TouchableOpacity style={styles.reserveButton} onPress={handleReservePress}>
+              <Text style={{...styles.reserveButtonText ,     color: color}}>Réserver une table </Text>
+            </TouchableOpacity>
+            </View>
+           }
+        </View>
            
           </View>
-          <TextInput
+         
+        </View>
+
+        {/* Informations supplémentaires */}
+        <View style={styles.searchBarContainer}>
+        <TextInput
             style={styles.searchBar}
             placeholder="Rechercher un produit"
             placeholderTextColor="#aaa"
@@ -98,56 +142,9 @@ export default function Vendeur({ color, layout, collectionName }) {
           />
         </View>
 
-        {/* Informations supplémentaires */}
-        <View style={styles.infoSection}>
-          <TouchableOpacity onPress={handlePhonePress}>
-            <View style={styles.infoTextContainer}>
-              <Ionicons name="call" size={16} color={color} /> 
-              <Text style={styles.infoText}>
-                {vendeur.tel}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.infoTextContainer}>
-            <Ionicons name="location" size={16} color={color} /> 
-            <Text style={styles.infoText}>
-                {vendeur.adresse}
-              </Text>
-          </View>
-
-          <TouchableOpacity onPress={handleOpenWhatsap}>
-            <View style={styles.infoTextContainer}>
-              <Ionicons name="logo-whatsapp" size={16} color={color} />
-              <Text style={styles.infoText}>
-              {vendeur.whatsapp || vendeur.tel} {vendeur.whatsapp || vendeur.tel}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.infoTextContainer}>
-            <Ionicons name="time" size={16} color={color} /> 
-            <Text style={styles.infoText}>
-               {vendeur.disponibilites}
-              </Text>
-          </View>
-
-          <View style={styles.infoTextContainer}>
-            <Ionicons name="star" size={16} color={'orange'} /> 
-            <Text style={styles.infoText}>
-               {vendeur.note.toFixed(2)|| '4.00'}/5
-            </Text>
-          </View>
-
-
-          <View style={styles.reserveButtonContainer}>
-          <TouchableOpacity style={[styles.reserveButton, { backgroundColor: color }]} onPress={handleReservePress}>
-            <Text style={styles.reserveButtonText}>Réserver</Text>
-          </TouchableOpacity>
-          </View>
-        </View>
-
         {/* Categories */}
         <View style={styles.categorySection}>
-          <Text style={[styles.categoryTitle, { color }]}>Explorer les offres de {vendeur.nom}</Text>
+          <Text style={styles.categoryTitle}>Explorer les offres de {vendeur.nom}</Text>
 
           {loading ? (
             <ActivityIndicator size="large" color={color} />
@@ -202,6 +199,9 @@ const styles = StyleSheet.create({
     fontFamily: 'montserrat-regular',
     color: '#fff',
   },
+  searchBarContainer:{
+    paddingHorizontal: 10
+  },
   searchBar: {
     backgroundColor: '#fff',
     borderRadius: 20,
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: RFValue(14),
     fontFamily: 'montserrat-regular',
-    color: '#333',
+    color: 'white',
     flexDirection: 'row',
     marginTop: 0,
     marginLeft: 12
@@ -235,12 +235,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     alignItems: 'center',
     marginTop: 16,
-    width: '80%'
+    width: '80%',
+   backgroundColor: 'white'
   },
   reserveButtonText: {
     fontSize: RFValue(14),
     fontFamily: 'montserrat-bold',
-    color: '#fff',
   },
   categorySection: {
     marginHorizontal: 16,

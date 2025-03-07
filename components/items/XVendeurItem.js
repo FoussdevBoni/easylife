@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { RFValue } from "react-native-responsive-fontsize";
 
 const VendeurCard = ({ item  , color , layout}) => {
+    
     const navigation = useNavigation()
     const reviews = item.reviews || []
     const navigateAction = ()=>{
@@ -52,7 +53,7 @@ const VendeurCard = ({ item  , color , layout}) => {
         }
         
         {/* Ligne 4: Boutons */}
-        <View style={styles.rowBetween}>
+        <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={navigateAction} style={[styles.decouvrir, {backgroundColor: color}]}>
             <Text style={styles.decouvrirText}>Découvrir</Text>
           </TouchableOpacity>
@@ -105,6 +106,9 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     color: "gray",
     marginLeft: 6,
+  },
+  buttonContainer: {
+    alignItems: 'center'
   },
   decouvrir: {
     paddingVertical: 10,

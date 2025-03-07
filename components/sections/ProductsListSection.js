@@ -24,25 +24,30 @@ function Section({layout , nom, description ,horizontal , categorieName  ,
     const dataArray = data || []
 
         const filteredData = dataArray.filter(product => {
-          const matchesName = nom ? keywordMatching(product.nom, nom) >= 0.5 : true;
-          const matchesDescription = description ? keywordMatching(product.description, description) >= 0.5 : true;
+          const matchesName = nom ? keywordMatching(product.nom, nom) >= 0.3 : true;
+          const matchesDescription = description ? keywordMatching(product.description, description) >= 0.3 : true;
           
           const categorieMatches  = categorieName ? product.categorie?.nom=== categorieName: true
-          
+           
           const reductionMatches  = horizontal ? !product.reduction: true
-          const layoutMatches = product?.layout===layout
+
+          const layoutMatches = layout ? product?.layout===layout: true
+        
           return (matchesName || matchesDescription  )
-          && categorieMatches&&reductionMatches && layoutMatches;
+          &&reductionMatches && layoutMatches && categorieMatches;
         });
 
-    const orderedByDistance = sortByIndex(filteredData , 'note')
 
-    setFilteredProducts(orderedByDistance);
+    setFilteredProducts(filteredData);
+    
   };
   
  useEffect(() => {
       getProducts(products)
+
    }, [nom, description , categorieName , horizontal , layout]);
+  
+
 
   return (
     <View>
@@ -65,6 +70,7 @@ function Section({layout , nom, description ,horizontal , categorieName  ,
 
 const ProductsListSection = ({layout , nom, description ,horizontal , categorieName  ,
     color , productType , collectionName })=>{
+
     return(
         <FirestoreProvider collectionName={collectionName}>
             <Section layout={layout} collectionName={collectionName} nom={nom} description={description}

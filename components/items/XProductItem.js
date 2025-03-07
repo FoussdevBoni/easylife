@@ -1,20 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { useVendeur } from "../../hooks/useVendeur";
+import { useSelector } from "react-redux";
 
-const XProductItem = ({ product , onAddCart , color , layout }) => {
+const XProductItem = ({ product , onAddCart , color , layout , openDetails }) => {
+     const cart = useSelector((state) => state.cart.cartData);
+     const existingItemCart = cart.find((item) => item.id === product.id);
+
     const reduction = product.prix*(1- product.reduction/100)
+    const [commandeRoute , setCommandeRoute] = useState()
     const navigation = useNavigation()
     const reviews = product.reviews || []
+    const {vendeur} = useVendeur({vendeurId: product.prestataireId})
+   
+      useEffect(()=>{
+          if (layout==='restaurant') {
+            setCommandeRoute("plat-commande-form")
+          } else if (layout==='pharmacie') {
+            setCommandeRoute("medico-commande-form")
+          } else if(layout==='supermarket'){
+            setCommandeRoute("article-commande-form")
+          }
+         } , [])
+    
+      const goToOrder = ()=>{
+    
+          const cartOne = [
+            { 
+            ...product,
+            quantity: 1 , 
+            prix: product.isPromo ? reduction: product.prix }
+          ]
+    
+    
+    
+          navigation.navigate(commandeRoute , {cart: cartOne , amount: cartOne[0].prix })
+      
+      }
+
   return (
     <View style={styles.card}>
       <Image source={{ uri: product.images[0] }} style={styles.image} />
       <View style={styles.infoContainer}>
         {/* Ligne 1: Logo et Nom du Resto */}
         <View style={styles.row}>
-          <Text style={styles.chez}>Chez</Text><Text style={styles.restoName}>  {product.prestataireName}</Text>
+          <View style={styles.logoContainer}>
+             <Image style={styles.logo} source={{uri: vendeur?.profile}}/>
+         </View>
+
+          <Text style={styles.restoName}> {vendeur?.nom}</Text>
         </View>
         
         {/* Ligne 2: Nom du product */}
@@ -22,6 +59,12 @@ const XProductItem = ({ product , onAddCart , color , layout }) => {
         
         {/* Ligne 3: Prix */}
         <View style={styles.row}>
+           {/* Ligne 4: Réduction */}
+        {product.reduction > 0 && (
+          <View style={[styles.discountBadge , {backgroundColor: color}]}>
+            <Text style={styles.discountText}>-{product.reduction}%</Text>
+          </View>
+        )}
           {
             product.reduction ? <Text style={styles.oldPrice}>{product.prix} FCFA</Text>
             :  <View style={styles.ratingRow}>
@@ -35,25 +78,27 @@ const XProductItem = ({ product , onAddCart , color , layout }) => {
           <Text style={styles.newPrice}>{reduction} FCFA</Text>
         </View>
         
-        {/* Ligne 4: Réduction */}
-        {product.reduction > 0 && (
-          <View style={[styles.discountBadge , {backgroundColor: color}]}>
-            <Text style={styles.discountText}>-{product.reduction}%</Text>
-          </View>
-        )}
+       
         
         {/* Ligne 5: Boutons */}
         <View style={styles.rowBetween}>
+         
+
           <TouchableOpacity onPress={()=>{
-            onAddCart()
-            navigation.navigate("cart")
-          }} style={[styles.commandButton , {backgroundColor: color}]}>
+            goToOrder()
+           }} style={[styles.commandButton , {backgroundColor: color}]}>
             <Text style={styles.commandText}>Commander</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cartButton} onPress={()=>{
-            onAddCart()
-          }}>
-            <FontAwesome name="shopping-cart" size={20} color="black" />
+            
+            if (!existingItemCart) {
+              onAddCart()
+            }else {
+              navigation.navigate("cart")
+            }
+            
+          }} >
+            <FontAwesome name={!existingItemCart ? "cart-plus": "shopping-cart" } size={20} color="black" />
           </TouchableOpacity>
         </View>
       </View>
@@ -84,6 +129,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: 'space-between',
     marginBottom: 4,
   },
   rowBetween: {
@@ -99,7 +145,8 @@ const styles = StyleSheet.create({
   },
   restoName: {
     fontSize: RFValue(13),
-    fontWeight: "600",
+    fontFamily: 'montserrat-bold',
+
   },
   productName: {
     fontSize: RFValue(13),
@@ -107,7 +154,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   oldPrice: {
-    fontSize: RFValue(12),
+    fontSize: RFValue(10),
     color: "gray",
     textDecorationLine: "line-through",
     marginRight: 8,
@@ -115,23 +162,24 @@ const styles = StyleSheet.create({
 
   },
   newPrice: {
-    fontSize: RFValue(12),
+    fontSize: RFValue(10),
     fontFamily: 'montserrat-bold',
   },
   discountBadge: {
     paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
     borderRadius: 6,
     alignSelf: "flex-end",
     marginBottom: 8,
-    width: '50%',
+    width: '20%',
     fontFamily: 'montserrat-regular',
+    marginRight: 8,
 
   },
   discountText: {
     color: "white",
-    fontSize: RFValue(12),
-    fontWeight: "600",
+    fontSize: RFValue(11),
+    fontFamily: 'montserrat-bold',
     textAlign: 'center'
   },
   commandButton: {

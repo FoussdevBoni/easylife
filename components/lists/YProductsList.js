@@ -43,7 +43,9 @@ const ProductItem = ({ product , layout , color }) => {
       style={styles.articleItem}
       onPress={() => navigation.navigate(`${route}`, {  product })}
     >
-      <YProductItem color={color}   product={product} onAddCart={addToCart} />
+      <YProductItem color={color} openDetails={()=>{
+        navigation.navigate(`${route}`, {  product })
+      }}  layout={layout}  product={product} onAddCart={addToCart} />
     </TouchableOpacity>
   );
 };
