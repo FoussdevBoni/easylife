@@ -33,7 +33,7 @@ const ProductDetails = ({color , layout , collectionName}) => {
     const [message , setMessage] = useState('')
    const existingItemFavorite = favorites.find((item) => item.id === product.id);
     const existingItemCart = cart.find((item) => item.id === product.id);
-    const reduction = product.prix*(1- product.reduction/100)
+    const reduction = product.prix*(1- (product.reduction || 0)/100)
 
     
 

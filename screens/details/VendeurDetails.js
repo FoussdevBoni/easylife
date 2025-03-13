@@ -20,19 +20,11 @@ export default function Vendeur({ color, layout, collectionName }) {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const note = vendeur.note ? vendeur.note.toFixed(1): '4.0'
-  const navigation = useNavigation();
-  const [myCoords, setMyCoords] = useState(null);
+  
 
-  // Get current location coordinates
-  const getMyCoords = async () => {
-    const data = await getCurrentAddress({ user });
-    const location = data?.location;
-    setMyCoords(location);
-  };
+ 
 
-  useEffect(() => {
-    getMyCoords();
-  }, []);
+
 
 
   // Fetch similar products based on the vendeur ID and search term
@@ -183,9 +175,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   logo: {
-    width: 80,
-    height: 80,
-    resizeMode: 'contain',
+    width: 120,
+    height: 120,
+    resizeMode: 'cover',
     marginBottom: 8,
     borderRadius: 25,
   },

@@ -9,12 +9,29 @@ import { keywordMatching } from '../../../../lib/functions/keyWordsMatching';
 import useSyncFirestore from '../../../../hooks/useSyncData';
 import { setImages } from '../../../../reducer/imagesSlice';
 
+
+const slogans = [
+  "Élégance et Grandeur à Votre Portée",
+  "Confort Élégant, Service Premium",
+  "Détendez-vous en Toute Excellence",
+  "Détente & Vitalité en Un Lieu", 
+  "Luxe Actif, Bien-être Garanti",
+  "Logements Spacieux, Confort & Élégance",
+  "Détente Assurée dans des Espaces Luxueux",
+
+"Modernité, Calme & Services Haut de Gamme",
+
+"Votre Havre de Paix en Ville ou Nature",
+
+"Équipements Complets pour un Séjour Parfait"
+]
 function LogementsListSection({ nom, description, horizontal, categorieName, adresse, bedrooms, startDate, endDate, myCoords }) {
   const [filteredLogements, setFilteredLogements] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const { data: logements } = useSyncFirestore({ collectionName: "logements" });
   const images = useSelector(state => state.images.images);
+
   const dispatch = useDispatch();
 
   // Fonction pour filtrer les logements
@@ -48,14 +65,24 @@ function LogementsListSection({ nom, description, horizontal, categorieName, adr
   useEffect(() => {
     getLogements(logements);
 
+     
     if (logements.length > 0) {
-      const newImagesSet = new Set();
+
+      const bastLogements = logements.slice(0 , 8)
+
+      const newImagesSet =    bastLogements.map((item , index)=>{
+        return ({
+          
+            id: item.id,
+            nom: item.nom,
+            description: item.description,
+            img: item.images[0],
+            slogan: slogans[index]
+          
+        })
+      });;
       
-      logements.forEach(item => {
-        if (item?.images && item?.note > 3) {
-          item.images.forEach(img => newImagesSet.add(img));
-        }
-      });
+   
 
       const newImagesArray = Array.from(newImagesSet);
 

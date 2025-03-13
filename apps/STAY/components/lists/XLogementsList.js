@@ -36,7 +36,7 @@ const LogementItem = ({ logement , user }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.logementItem} onPress={()=>{
+    <TouchableOpacity  style={styles.logementItem} onPress={()=>{
       navigation.navigate("logement-details" , {logement})
     }}>
 
@@ -85,7 +85,7 @@ function XLogementsList({ logements , user }) {
     <FlatList
       horizontal
       data={logements}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item , index) => index.toString()}
       renderItem={({ item }) => <LogementItem user={user} logement={item} />}
       contentContainerStyle={styles.container}
       showsHorizontalScrollIndicator={false} // Cache la barre de défilement horizontale

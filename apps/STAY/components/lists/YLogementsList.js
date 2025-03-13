@@ -85,7 +85,7 @@ function YLogementsList({ logements, user }) {
   return (
     <FlatList
       data={logements}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item , index) => index.toString()}
       renderItem={({ item }) => <LogementItem logement={item} user={user} />}
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}

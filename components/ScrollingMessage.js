@@ -39,13 +39,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 5,
     overflow: "hidden",
-    height: 40,
+    height: '100%',
+
   },
   message: {
     fontSize: 20,
     fontFamily: 'montserrat-regular',
-
-    color: "#333",
+    top: -4,
+    color: "#fff",
     position: "absolute",
     whiteSpace: "nowrap", // Texte sur une seule ligne
   },

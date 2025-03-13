@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Appbar, Menu, Title } from 'react-native-paper';
+import { Appbar, Chip, Menu, Title } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -105,9 +105,10 @@ const duration = data ? calculDuration(data?.startDate  , data?.endDate): 1
       </Appbar.Header>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={[{ id: '1' }]}
         keyExtractor={(item) => item.id}
-        renderItem={() => (
+        renderItem={() =>(
           <View>
             <ImagesGallery images={images} />
 
@@ -121,7 +122,7 @@ const duration = data ? calculDuration(data?.startDate  , data?.endDate): 1
                 renderItem={({ item }) => (
                   <View style={styles.characteristicItem}>
                     <View style={styles.avatar}>
-                      <Ionicons name={item.icon} size={30} color="white" />
+                      <Ionicons name={item.icon} size={20} color="white" />
                     </View>
                     <Text style={styles.characteristicText}>{item.text}</Text>
                   </View>
@@ -139,12 +140,18 @@ const duration = data ? calculDuration(data?.startDate  , data?.endDate): 1
                 </View>
               </View>
 
+              <View style={styles.priceContainer}>
+                  <Chip 
+                    style={styles.priceChip} 
+                    textStyle={styles.priceChipText}
+                  >
+                    {`XAF ${logement.prix * duration} `}
+                  </Chip>
+                  <Text style={styles.durationText}>
+                    pour {duration} jour{duration > 1 ? 's' : ''}
+                  </Text>
+                </View>
               <View style={styles.section}>
-                <Text style={styles.sectionText}>Tarifs pour {duration} jours</Text>
-              </View>
-              <View style={styles.section}>
-                <Title style={styles.priceText}>XAF {logement.prix*duration} F </Title>
-                <Text style={styles.taxText}>Taxes et frais compris</Text>
               </View>
 
               {/* Description */}
@@ -215,14 +222,13 @@ const styles = StyleSheet.create({
   },
   avatar: {
     borderRadius: 30,
-    height: 60,
-    width: 60,
+    height: 30,
+    width: 30,
     backgroundColor: colors.tertiary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   characteristicText: {
-    marginTop: 5,
     color: colors.tertiary,
     fontFamily: 'montserrat-bold',
     fontSize: RFValue(11),
@@ -230,7 +236,7 @@ const styles = StyleSheet.create({
   fullWidthContainer: {
     flex: 1,
     width: '100%',
-    padding: 20,
+    paddingHorizontal: 20,
     justifyContent: 'space-between',
   },
   descriptionContainer: {
@@ -260,7 +266,7 @@ const styles = StyleSheet.create({
        borderRadius: 10
   },
   title: {
-    fontSize: RFValue(15),
+    fontSize: RFValue(16),
     fontFamily: 'montserrat-bold',
     color: 'black',
   },
@@ -304,6 +310,26 @@ const styles = StyleSheet.create({
     fontSize: RFValue(13),
     fontFamily: 'montserrat-bold',
     textAlign: 'center',
+  },
+
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  priceChip: {
+    backgroundColor: colors.tertiary,
+  },
+  priceChipText: {
+    color: 'white',
+    fontFamily: 'montserrat-bold',
+    fontSize: RFValue(14),
+  },
+  durationText: {
+    marginLeft: 8,
+    color: '#666',
+    fontFamily: 'montserrat-regular',
+    fontSize: RFValue(12),
   },
 });
 

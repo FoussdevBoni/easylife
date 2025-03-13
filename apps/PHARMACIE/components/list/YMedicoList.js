@@ -18,6 +18,7 @@ const MedicoItem = ({ medicament }) => {
       <View style={styles.nameContainer}>
         <Text style={styles.nameText}>{medicament.nom}</Text>
       </View>
+      
       <View style={styles.priceContainer}>
         <Text style={styles.priceText}>{medicament.prix} FCFA</Text>
       </View>

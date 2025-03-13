@@ -35,6 +35,8 @@ const dispatch = useDispatch()
 const [payementRef , setPayementRef] = useState("")
 const amount = sampleAmount + 500
 const [showFooter , setShowFooter ]= useState(true)
+const medicoWithOrdo = cart.filter((item)=>(item.ordonnance))
+
 const sendNotif = () => {
     const notification = {
         message: `${user?.nom} a commandée  ${pharmaCart.length} medicaments `,
@@ -105,6 +107,10 @@ const handleSendCommande = () => {
 };
 
        const handleSubmit = ()=>{
+         if (medicoWithOrdo.length>0&&(ordonnance===""|| !ordonnance)) {
+          Alert.alert("Erreur" , "Vous devriez télécharger une odonnance")
+          return 
+        }
 
             const currentBalance = user.solde || 0
             if (selectedPayment==='mainAccount') {
@@ -353,12 +359,17 @@ useEffect(()=>{
           </View>
   
           <View style={styles.validationContainer}>
-            <TouchableOpacity style={[styles.validationButton , {backgroundColor: color}]} onPress={()=>{
-                 if (!loading) {
-                handleSubmit()
-              }else{
-                Alert.alert("Désolé" , "Une opération est en cour")
-              }
+            <TouchableOpacity style={[styles.validationButton , 
+            {backgroundColor: color}]} onPress={()=>{
+               if (medicoWithOrdo.length>0&&ordonnance==="") {
+                 Alert.alert("Erreur" , "Vous devriez télécharger une odonnance")
+               }else{
+                if (!loading) {
+                  handleSubmit()
+             }else{
+               Alert.alert("Désolé" , "Une opération est en cour")
+             }
+               }
             }}>
               {
                 !loading ? <Text style={styles.validationButtonText}>Valider votre commande</Text>: <ActivityIndicator size={25} color='white'/>
@@ -384,7 +395,7 @@ useEffect(()=>{
             <TextInput
                multiline
                numberOfLines={5}
-              style={styles.input}
+              style={styles.multilinInput}
               placeholder="Entrez plus de détails"
               value={details}
               onChangeText={setDetails}
@@ -392,7 +403,7 @@ useEffect(()=>{
 
             
               {
-                layout==='pharmacie' && <>
+                layout==='pharmacie' && medicoWithOrdo.length>0&& <>
                   
             <Text style={styles.inputLabel}>Prendre une photo de l'ordonnance</Text>
           <View style={styles.formAction}>
@@ -594,6 +605,23 @@ const styles = StyleSheet.create({
       elevation: 2,
       marginBottom: 15,
       textAlign: 'center'
+  },
+  multilinInput: {
+    height: 100,
+    textAlignVertical: 'top',
+    paddingTop: 12,
+    width: '100%',
+
+    eight: 50,
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#333',
+    borderWidth: 1,
+    borderColor: '#ddd',
+
   },
   submitButton: {
     paddingVertical: 15,

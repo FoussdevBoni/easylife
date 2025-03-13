@@ -177,9 +177,9 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomWidth: 0,
     fontSize: RFValue(13),
-    marginTop: 10,
+    marginTop: 1,
     fontFamily: 'montserrat-regular',
-
+     
   },
   divider: {
     marginVertical: 1,

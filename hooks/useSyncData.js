@@ -42,8 +42,8 @@ const useSyncFirestore = ({ collectionName }) => {
           : "quelques";
 
         return ({
-          id: doc.id,
           ...data,
+          id: doc.id,
           distance: distance === "quelques" ? distance : distance.toFixed(0),
         })
       });
@@ -69,8 +69,8 @@ const useSyncFirestore = ({ collectionName }) => {
             : "quelques";
 
           return {
-            id: doc.id,
              ...data,
+             id: doc.id,
             distance: distance === "quelques" ? distance : distance.toFixed(0),
           };
         });

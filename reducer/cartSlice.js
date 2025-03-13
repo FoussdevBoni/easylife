@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   cartData: [],
-  lastFetchTime: 0,
 };
 
 export const cartSlice = createSlice({
@@ -12,7 +11,6 @@ export const cartSlice = createSlice({
   reducers: {
     setCart(state, action) {
       state.cartData = action.payload;
-      state.lastFetchTime = Date.now();
     },
     deleteCart(state){
      state.cartData = [];

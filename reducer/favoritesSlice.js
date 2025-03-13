@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   favoritesData: [],
-  lastFetchTime: 0,
 };
 
 export const favoritesSlice = createSlice({
@@ -12,7 +11,6 @@ export const favoritesSlice = createSlice({
   reducers: {
     setFavorites(state, action) {
       state.favoritesData = action.payload;
-      state.lastFetchTime = Date.now();
     },
     deleteFavorites(state){
      state.favoritesData = [];

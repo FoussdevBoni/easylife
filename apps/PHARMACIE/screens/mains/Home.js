@@ -71,7 +71,7 @@ export default function PharmacieHome({ user  }) {
             <Text style={styles.urgentButtonText}>Parler à un médecin</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.platContainer}>
+        <View style={styles.restoContainer}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Médicaments urgents</Text>
             <TouchableOpacity onPress={() => navigation.navigate("medicaments-list")}>
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 0,
     paddingHorizontal: 15,
   },
   headerText: {
@@ -207,9 +207,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-SemiBold',
   },
   urgentContainer: {
-    marginVertical: 20,
+    marginVertical: -5,
     paddingHorizontal: 15,
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 10
+  },
+  sectionBody: {
+    marginBottom: 10
   },
   urgentButton: {
     backgroundColor: colors.primary,

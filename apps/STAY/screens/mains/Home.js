@@ -50,13 +50,13 @@ function Home({user}) {
     <View  style={styles.container}>
       
         <ScrollHome collectionName={"logements"}>
-        <Title style={styles.title}>
+        <Title style={{...styles.title, textAlign: 'center'}}>
            Nos meilleurs espaces
           </Title>
           <View style={{marginTop: 1}}>
           <BestLogements />
           </View>
-          <Title style={{ ...styles.title , marginTop: 10}}>
+          <Title style={{ ...styles.title , marginTop: 20}}>
             Trouver votre logement idéal
           </Title>
         <View style={styles.barsContainer}>
@@ -65,7 +65,7 @@ function Home({user}) {
         </View>
 
         <View style={styles.logementsListContainer}>
-          <Title style={styles.title}>
+          <Title style={{...styles.title , marginLeft: -1, marginTop: 20}}>
             A proximité
           </Title>
           <LogementsListSection user={user} myCoords={myCoords} location={50} horizontal={true}/>
@@ -152,11 +152,11 @@ const styles = StyleSheet.create({
   barsContainer: {
     backgroundColor: '#ccc',
     borderRadius: 16,
-    marginTop: 10
+    marginTop: 1
    
   },
   logementsListContainer: {
-        padding: 15
+        padding: -50
 
   },
     // Bottom bar

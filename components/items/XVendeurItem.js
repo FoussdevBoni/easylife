@@ -32,6 +32,14 @@ const VendeurCard = ({ item  , color , layout}) => {
         <View style={styles.row}>
           <Ionicons name="location-outline" size={16} color={color} />
           <Text style={styles.adressText}>{item.adresse}</Text>
+          
+        </View>
+        <View style={styles.row}>
+        <Ionicons name="walk-outline" size={16} color={color} />
+          <Text style={styles.adressText}>
+            A {item.distance} km de vous
+          </Text>
+        
         </View>
         
         {/* Ligne 3: Note et Avis */}
@@ -101,7 +109,9 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     color: "gray",
     marginLeft: 6,
-  },
+    flexWrap: "wrap",
+    maxWidth: "90%", // Ajuste selon ton besoin
+},
   ratingText: {
     fontSize: RFValue(12),
     color: "gray",

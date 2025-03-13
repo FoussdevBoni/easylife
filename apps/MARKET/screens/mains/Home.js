@@ -70,7 +70,7 @@ export default function SupermarketHome({ user }) {
           <CategoriesListSection  layout={"supermarket"} color={colors.primary} horizontal={true} />
         </View>
 
-         <View style={{marginBottom: 10}}>
+         <View style={styles.scrollMessage}>
            <ScrollingMessage message={`L'équipe d’easy Life est prête pour vous servir comme un roi ou Reine`}/>
          </View>
           
@@ -196,7 +196,7 @@ export default function SupermarketHome({ user }) {
 
 const styles = StyleSheet.create({
   categoriesContainer: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   restoContainer: {
     marginBottom: 20,
@@ -224,7 +224,19 @@ const styles = StyleSheet.create({
 
   },
   
-  
+  scrollMessage: {
+    width: '100%',
+    backgroundColor: '#4CAF50',
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 0,
+    height: 60,
+    justifyContent: 'center'
+  },
   // Bottom bar
   bottomBar: {
     position: "absolute",

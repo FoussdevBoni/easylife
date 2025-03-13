@@ -6,6 +6,7 @@ import YVendeursList from '../lists/YVendeursList';
 import { colors } from '../../utils/colors';
 import { useSelector } from 'react-redux';
 import useSyncFirestore from '../../hooks/useSyncData';
+import { sortByDistance } from '../../lib/functions/sortData';
 
 function VendeurListSection({  horizontal , layout , color , garde }) {
   const [loading, setLoading] = useState(true); 
@@ -23,7 +24,8 @@ function VendeurListSection({  horizontal , layout , color , garde }) {
       return matchesLayout && gardeMatches;
     });
     
-    setFilteredVendeurs(filteredData);
+    const sortedByDistance = sortByDistance(filteredData)
+    setFilteredVendeurs(sortedByDistance);
     setLoading(false);
   };
 

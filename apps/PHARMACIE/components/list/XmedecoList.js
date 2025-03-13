@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, FlatList, Alert } from 'react-native';
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { colors } from '../../../../utils/colors';
 
 const MedicoItem = ({ medicament }) => {
   const navigation = useNavigation()
@@ -16,6 +17,9 @@ const MedicoItem = ({ medicament }) => {
       </View>
       <Text style={styles.medicoName}>
         {medicament.nom}
+      </Text>
+      <Text style={{    fontFamily: 'montserrat-regular', color: colors.primary , fontSize: RFValue(10)}}>
+        {medicament.ordonnance ? "Avec ordonnance": "Sans ordonnance"}
       </Text>
       <Text style={{    fontFamily: 'montserrat-regular' , fontSize: RFValue(12)}}>
         {medicament.prix} FCFA
@@ -66,6 +70,6 @@ const styles = StyleSheet.create({
     maxWidth: '100%', // Limiter le texte à la largeur de l'item
   },
   medicoListContainer: {
-    padding: 20,
+    paddingHorizontal: 3,
   },
 });
